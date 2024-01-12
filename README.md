@@ -8,12 +8,12 @@
 	-개선된 본문과 함께 본문을 바탕으로 생성한 제목과 요약이 표기됩니다.
 	-gpt 변환시 다소 시간이 소요되며, api를 사용함으로 과도한 반복사용은 비용을 유발할 수 있습니다.
 
-1.Execute the code in the News.ipynb file sequentially.
-  -Due to the nature of scraping, it may take some time.
-  -If openai is not installed, run pip install openai in the middle of the News.ipynb file.
-  -When you run the Flask code, the HTML will be executed at http://127.0.0.1:5000 displayed at the bottom.
-  
-2.GPT Conversion
-  -Click the 'Convert to GPT' button next to the original news link to send the body of the news to GPT-3.5 turbo for improvement.
-  -Along with the improved body, a title and summary generated based on the body will be displayed.
-  -GPT conversion may take some time, and excessive use of the API can incur costs.
+
+1. Execute the code in the News.ipynb file sequentially.
+	-Due to the nature of scraping, it may take some time.
+	-If openai is not installed, run pip install openai in the middle of the News.ipynb file.
+	-When you run the Flask code, the HTML will be executed at http://127.0.0.1:5000 displayed at the bottom.
+2. GPT Conversion
+	-Click the 'Convert to GPT' button next to the original news link to send the body of the news to GPT-3.5 turbo for improvement.
+	-Along with the improved body, a title and summary generated based on the body will be displayed.
+	-GPT conversion may take some time, and excessive use of the API can incur costs.
