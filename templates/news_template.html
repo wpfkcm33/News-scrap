@@ -6,7 +6,7 @@
     <title>News Comparison</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <script>
-        function fetchGptContent(originalContent, newsId, btn) {
+        function fetchGptContent(originalContent, newsId, index, btn) {
             console.log("Original Content:", originalContent);
             // 버튼을 비활성화합니다.
             btn.disabled = true;
@@ -37,7 +37,7 @@
         
                 // HTML 업데이트
                 document.getElementById('gpt-news-' + newsId).innerHTML = 
-                    '<h2 class="news-title">' + title + '</h2>' +
+                    '<h2 class="news-title">' + index + '. ' + title + '</h2>' +
                     '<p class="news-summary">' + summary + '</p>' +
                     '<p class="news-content">' + content + '</p>';
             })
@@ -56,14 +56,16 @@
         <div class="original-news">
             {% for news in news_data %}
             <div class="news-card">
-                <h2 class="news-title">{{ loop.index }}. {{ news[1] }}</h2> <!-- 뉴스 제목 -->
-                <p class="news-summary">{{ news[2] }}</p> <!-- 뉴스 요약 -->
-                <p class="news-content">{{ news[5] | safe }}</p> <!-- 뉴스 본문 -->
-                <a href="{{ news[3] }}" class="news-link">Original Link</a> <!-- 원문 링크 -->
-                <a href="{{ news[4] }}" class="news-detailed-link">Naver News Link</a> <!-- 상세 페이지 링크 -->
+                <h2 class="news-title">{{ loop.index }}. {{ news[2] }}</h2> <!-- 뉴스 제목 -->
+                <p class="news-summary">{{ news[3] }}</p> <!-- 뉴스 요약 -->
+                <p class="news-content">{{ news[6] | safe }}</p> <!-- 뉴스 본문 -->
+                <p class="news-date">{{ news[1] | safe }}</p> <!-- 뉴스 날짜 -->
+                <p class="news-press">{{ news[7] | safe }}</p> <!-- 뉴스 언론사 -->
+                <a href="{{ news[4] }}" class="news-link">Original Link</a> <!-- 원문 링크 -->
+                <a href="{{ news[5] }}" class="news-detailed-link">Naver News Link</a> <!-- 상세 페이지 링크 -->
                 <!-- `onclick` 이벤트가 버튼에만 설정됩니다 -->
                 
-                <button onclick="fetchGptContent(('{{ news[5] }}'), {{ news[0] }}, this)">GPT로 변환</button>
+                <button onclick="fetchGptContent(('{{ news[6] }}'), {{ news[0] }}, {{ loop.index }}, this)">GPT로 변환</button>
             </div>
             {% endfor %}
         </div>
