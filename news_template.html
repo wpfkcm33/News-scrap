@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Comparison</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function fetchGptContent(originalContent, newsId, index, btn) {
+            console.log("Original Content:", originalContent);
+            // 버튼을 비활성화합니다.
+            btn.disabled = true;
+            
+            fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'content=' + unescape(originalContent)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response Data:", data);
+                const gptResult = data.gpt_result;
+                const sections = gptResult.split('gpt_');
+                let title = "", summary = "", content = "";
+        
+                sections.forEach(section => {
+                    if (section.startsWith("title:")) {
+                        title = section.split("title:")[1].trim();
+                    } else if (section.startsWith("summary:")) {
+                        summary = section.split("summary:")[1].trim();
+                    } else if (section.startsWith("content:")) {
+                        content = section.split("content:")[1].trim();
+                    }
+                });
+        
+                // HTML 업데이트
+                document.getElementById('gpt-news-' + newsId).innerHTML = 
+                    '<h2 class="news-title">' + index + '. ' + title + '</h2>' +
+                    '<p class="news-summary">' + summary + '</p>' +
+                    '<p class="news-content">' + content + '</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                // 리퀘스트가 완료되면 버튼을 다시 활성화합니다.
+                btn.disabled = false;
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="news-wrapper">
+        <div class="original-news">
+            {% for news in news_data %}
+            <div class="news-card">
+                <h2 class="news-title">{{ loop.index }}. {{ news[2] }}</h2> <!-- 뉴스 제목 -->
+                <p class="news-summary">{{ news[3] }}</p> <!-- 뉴스 요약 -->
+                <p class="news-content">{{ news[6] | safe }}</p> <!-- 뉴스 본문 -->
+                <p class="news-date">{{ news[1] | safe }}</p> <!-- 뉴스 날짜 -->
+                <p class="news-press">{{ news[7] | safe }}</p> <!-- 뉴스 언론사 -->
+                <a href="{{ news[4] }}" class="news-link">Original Link</a> <!-- 원문 링크 -->
+                <a href="{{ news[5] }}" class="news-detailed-link">Naver News Link</a> <!-- 상세 페이지 링크 -->
+                <!-- `onclick` 이벤트가 버튼에만 설정됩니다 -->
+                
+                <button onclick="fetchGptContent(('{{ news[6] }}'), {{ news[0] }}, {{ loop.index }}, this)">GPT로 변환</button>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="gpt-news">
+            {% for news in news_data %}
+            <div class="news-card" id="gpt-news-{{ news[0] }}">
+                <!-- GPT 변환된 뉴스가 여기에 표시됩니다. -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
