@@ -6,6 +6,17 @@ body {
     justify-content: center;
 }
 
+#settings-panel {
+    border: 1px solid #ccc; /* 회색 테두리 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    background-color: white;
+    padding: 10px;
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    display: none;
+}
+
 .news-wrapper {
     display: flex;
     width: 100%;
