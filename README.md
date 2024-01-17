@@ -7,7 +7,7 @@
 	-원본 뉴스 링크 옆에 있는 gpt로 변환 버튼을 누르면 해당 뉴스의 본문을 gpt3.5 turbo로 전송해 개선시키도록 합니다.
 	-개선된 본문과 함께 본문을 바탕으로 생성한 제목과 요약이 표기됩니다.
 	-gpt 변환시 다소 시간이 소요되며, api를 사용함으로 과도한 반복사용은 비용을 유발할 수 있습니다.
-결과물- [ipynb](https://github.com/wpfkcm33/News-scrap/blob/main/News.ipynb), [csv]
+결과물- [ipynb](https://github.com/wpfkcm33/News-scrap/blob/main/News.ipynb), [csv](https://github.com/wpfkcm33/News-scrap/blob/main/news_data.csv)
 
 1. Execute the code in the News.ipynb file sequentially.
 	-Due to the nature of scraping, it may take some time.
