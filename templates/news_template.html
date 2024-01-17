@@ -7,6 +7,12 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <script>
         function fetchGptContent(originalContent, newsId, index, btn) {
+            var summaryLimit = localStorage.getItem('summaryLimit') || '50';
+            var titleLimit = localStorage.getItem('titleLimit') || '30';
+            var userRequest = localStorage.getItem('userRequest') || '';
+            var language = localStorage.getItem('language') || '한국어';
+
+        
             console.log("Original Content:", originalContent);
             // 버튼을 비활성화합니다.
             btn.disabled = true;
@@ -16,7 +22,7 @@
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'content=' + unescape(originalContent)
+                body: 'content=' + unescape(originalContent) + encodeURIComponent(language) + '&summaryLimit=' + summaryLimit + '&titleLimit=' + titleLimit + '&user_request=' + encodeURIComponent(userRequest)
             })
             .then(response => response.json())
             .then(data => {
@@ -52,17 +58,43 @@
     </script>
 </head>
 <body>
+    <button id="settings-button" style="position: fixed; top: 10px; right: 10px;">⚙️</button>
+    <div id="settings-panel" style="display: none; position: fixed; top: 50px; right: 10px; background-color: white; padding: 10px;">
+        <div class="settings-field">
+            <label for="summary-limit">요약 길이 제한:</label>
+            <input type="number" id="summary-limit" value="50">
+        </div>
+    
+        <div class="settings-field">
+            <label for="title-limit">제목 길이 제한:</label>
+            <input type="number" id="title-limit" value="30">
+        </div>
+    
+        <div class="settings-field">
+            <label for="user-request">추가 요청:</label>
+            <input type="text" id="user-request" placeholder="예: 제목 끝에 냥을 붙여줘">
+        </div>
+    
+        <div class="settings-field">
+            <label for="language">언어:</label>
+            <input type="text" id="language" placeholder="예: 영어">
+        </div>
+    
+        <button onclick="saveSettings()">저장</button>
+    </div>
+    
     <div class="news-wrapper">
         <div class="original-news">
             {% for news in news_data %}
             <div class="news-card">
+                <p class="news-summary">{{ news[8] }}</p> <!-- 뉴스 카테고리 -->
                 <h2 class="news-title">{{ loop.index }}. {{ news[2] }}</h2> <!-- 뉴스 제목 -->
                 <p class="news-summary">{{ news[3] }}</p> <!-- 뉴스 요약 -->
                 <p class="news-content">{{ news[6] | safe }}</p> <!-- 뉴스 본문 -->
                 <p class="news-date">{{ news[1] | safe }}</p> <!-- 뉴스 날짜 -->
                 <p class="news-press">{{ news[7] | safe }}</p> <!-- 뉴스 언론사 -->
                 <a href="{{ news[4] }}" class="news-link">Original Link</a> <!-- 원문 링크 -->
-                <a href="{{ news[5] }}" class="news-detailed-link">Naver News Link</a> <!-- 상세 페이지 링크 -->
+                <a href="{{ news[5] }}" class="news-detailed-link">Naver News Link</a> <!-- 네이버 뉴스 링크 -->
                 <!-- `onclick` 이벤트가 버튼에만 설정됩니다 -->
                 
                 <button onclick="fetchGptContent(('{{ news[6] }}'), {{ news[0] }}, {{ loop.index }}, this)">GPT로 변환</button>
@@ -78,4 +110,31 @@
         </div>
     </div>
 </body>
+<script>
+    // 문서가 로드된 후 실행될 함수
+    document.addEventListener('DOMContentLoaded', function() {
+        // 설정 버튼 클릭 이벤트 핸들러
+        document.getElementById('settings-button').onclick = function() {
+            var panel = document.getElementById('settings-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        };
+
+        // 설정 저장 함수
+        window.saveSettings = function() {
+            var summaryLimit = document.getElementById('summary-limit').value;
+            var titleLimit = document.getElementById('title-limit').value;
+            var userRequest = document.getElementById('user-request').value;
+            var userRequest = document.getElementById('language').value;
+
+            // localStorage를 사용하여 설정 저장
+            localStorage.setItem('summaryLimit', summaryLimit);
+            localStorage.setItem('titleLimit', titleLimit);
+            localStorage.setItem('userRequest', userRequest);
+            localStorage.setItem('language', language);
+
+            // 설정 패널 숨기기
+            document.getElementById('settings-panel').style.display = 'none';
+        };
+    });
+</script>
 </html>
