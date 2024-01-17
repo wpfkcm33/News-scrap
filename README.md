@@ -1,7 +1,7 @@
 # News scrap & gpt transform
 1. News.ipynb파일에 있는 코드를 순차적으로 실행합니다.
 	-스크랩 특성 상 다소 시간이 소요됩니다.
-	-openai 가 설치되어있지 않을 경우, News.ipynb 중간에 pip install openai 를 실행해주세요.
+	-openai api key의 경우,[].
 	-Flask 코드를 실행하면 하단에 표기되는 http://127.0.0.1:5000 로 html이 실행됩니다.
 2. gpt 변환
 	-원본 뉴스 링크 옆에 있는 gpt로 변환 버튼을 누르면 해당 뉴스의 본문을 gpt3.5 turbo로 전송해 개선시키도록 합니다.
